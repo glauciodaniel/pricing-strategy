@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
 on:
   push:
@@ -9,13 +9,10 @@ on:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v3
-
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
@@ -24,26 +21,5 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
-      - name: Compilar o projeto
-        run: npm run build
-
       - name: Executar testes
         run: npm test
-
-      - name: Publicar resultados dos testes
-        if: always()
-        uses: actions/upload-artifact@latest
-        with:
-          name: test-results
-          path: "**/test-results.xml"
-
-      - name: Preparar artefatos para publicação
-        run: |
-          mkdir -p artifacts
-          cp -r dist/* artifacts/
-
-      - name: Publicar artefatos
-        uses: actions/upload-artifact@latest
-        with:
-          name: build-artifacts
-          path: artifacts/
